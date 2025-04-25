@@ -102,7 +102,6 @@ const hasErrors = (account: AccountData) => {
         class="mb-6 p-4 border border-gray-300 rounded-bd bg-white"
       >
         <el-row :gutter="20" class="flex-wrap">
-          <el-col :span="24">
             <el-form-item label="Метка" :error="account.errors.label ? 'Максимум 50 символов' : ''">
               <el-input
                 v-model="account.label"
