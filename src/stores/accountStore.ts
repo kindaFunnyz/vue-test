@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { type RawAccount, SavedAccountModel } from '@/types/recordType.ts';
+import { SavedAccountModel } from '@/types/recordType.ts';
 
 interface AccountState {
   accounts: SavedAccountModel[];

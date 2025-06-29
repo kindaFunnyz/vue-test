@@ -1,6 +1,6 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-export function useIsMobile(threshold = 650) {
+export function useIsMobile(threshold = 750) {
   const isMobile = ref(false);
 
   const checkScreenWidth = () => {

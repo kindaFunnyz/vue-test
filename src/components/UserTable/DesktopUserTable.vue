@@ -57,8 +57,7 @@ onMounted(() => {
   background-color: #ebeef5;
 }
 
-.header-cell,
-.table-cell {
+.header-cell {
   padding: 12px 16px;
   background-color: white;
   overflow: hidden;
@@ -72,9 +71,5 @@ onMounted(() => {
 
 .table-row.has-error {
   background-color: #fff1f0;
-}
-
-.is-error :deep(.el-input__wrapper) {
-  box-shadow: 0 0 0 1px #f56c6c inset;
 }
 </style>

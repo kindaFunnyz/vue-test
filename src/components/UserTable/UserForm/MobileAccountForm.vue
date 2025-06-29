@@ -12,7 +12,7 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
     :model="data"
     :rules="rules"
     ref="formRef"
-    label-position="top"
+    label-position="left"
     class="mb-6 p-4 border border-gray-300 rounded-bd bg-white"
   >
     <el-row :gutter="20" class="flex-wrap">
@@ -78,9 +78,6 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
   </el-form>
 </template>
 <style scoped>
-.mb-4 {
-  margin-bottom: 1rem;
-}
 .mb-6 {
   margin-bottom: 1.5rem;
 }
@@ -101,9 +98,5 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
 }
 .items-end {
   align-items: flex-end;
-}
-
-.is-error :deep(.el-input__wrapper) {
-  box-shadow: 0 0 0 1px #f56c6c inset;
 }
 </style>

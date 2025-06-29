@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import HomeView from '@/views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue';
 </script>
 
 <template>
   <el-container style="min-height: 100vh">
-    <el-header class="bg-white shadow-sm px-4 flex items-center justify-between">
+    <el-header
+      class="bg-white shadow-sm px-4 flex items-center justify-between"
+    >
       <h1 class="text-xl font-bold">Панель управления</h1>
     </el-header>
     <el-main class="bg-gray-50 py-6 px-4">

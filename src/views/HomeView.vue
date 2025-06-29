@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AdminComponent from '../components/AdminComponent.vue'
+import AdminComponent from '../components/AdminComponent.vue';
 </script>
 
 <template>
