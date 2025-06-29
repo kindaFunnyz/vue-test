@@ -119,7 +119,7 @@ export class SavedAccountModel implements SavedAccount {
   toRawAccount(): RawAccount {
     return {
       id: this.id,
-      label: this.label.reduce((acc, cur) => acc + cur + '; ', ''),
+      label: this.label.reduce((acc, cur) => acc + cur.text + '; ', ''),
       type: this.type,
       login: this.login,
       password: this.password ?? '',
