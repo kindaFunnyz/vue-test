@@ -1,54 +1,42 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import { SavedAccountModel } from '@/types/recordType.ts';
+import {
+  loadAccountsFromStorage,
+  removeAccount,
+  saveAccount,
+} from '@/stores/accountStorage.ts';
 
-export enum RecordType {
-  ldap = 'LDAP',
-  local = 'Локальная',
-}
-export interface SavedAccount {
-  id: string
-  label: { text: string }[]
-  type: RecordType
-  login: string
-  password: string | null
-}
-export interface AccountData {
-  id: string
-  label: string
-  type: RecordType
-  login: string
-  password: string
-  errors: {
-    label: boolean
-    type: boolean
-    login: boolean
-    password: boolean
-  }
+interface AccountState {
+  accounts: SavedAccountModel[];
 }
 export const useAccountStore = defineStore('accountStore', {
-  state: () => ({
-    accounts: [] as SavedAccount[],
+  state: (): AccountState => ({
+    accounts: [],
   }),
-  getters: {},
   actions: {
-    saveAccounts(accounts: AccountData[]) {
-      this.accounts = accounts.map((acc) => ({
-        id: acc.id,
-        label: acc.label
-          .split(';')
-          .map((v) => v.trim())
-          .filter(Boolean)
-          .map((v) => ({ text: v })),
-        type: acc.type,
-        login: acc.login,
-        password: acc.type === 'LDAP' ? null : acc.password,
-      }))
-      localStorage.setItem('accounts', JSON.stringify(this.accounts))
+    addAccount(account: SavedAccountModel) {
+      if (this.accounts.some((acc) => acc.id === account.id)) {
+        throw new Error(`Аккаунт с id ${account.id} уже существует`);
+      }
+      this.accounts.push(account);
+      saveAccount(account);
     },
-    loadAccounts() {
-      const saved = localStorage.getItem('accounts')
-      if (saved) {
-        this.accounts = JSON.parse(saved)
+    editAccount(account: SavedAccountModel) {
+      const index = this.accounts.findIndex((val) => val.id === account.id);
+      if (index === -1) throw new Error(`Аккаунт с id ${account.id} не найден`);
+
+      this.accounts[index] = account;
+      saveAccount(account);
+    },
+    removeAccount(id: string) {
+      const index = this.accounts.findIndex((val) => val.id === id);
+      if (index !== -1) {
+        this.accounts.splice(index, 1);
+        removeAccount(id);
       }
     },
+    loadAccounts() {
+      this.accounts = loadAccountsFromStorage();
+    },
   },
-})
+});
