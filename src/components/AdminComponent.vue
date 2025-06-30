@@ -7,21 +7,26 @@ import { ElNotification } from 'element-plus';
 
 const { isMobile } = useIsMobile();
 const needNew = ref<boolean>(false);
-let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+const isDebounced = ref<boolean>(false);
 
-const setAddNew = () => {
-  if (debounceTimeout) return;
+const showExpiringWarning = (text: string) => {
+  ElNotification.warning({
+    message: text,
+    duration: 3000,
+  });
+};
+
+const handleAddClick = () => {
+  if (isDebounced.value) return;
 
   if (needNew.value) {
-    ElNotification.warning({
-      message: 'Сначала сохраните предыдущий аккаунт',
-      duration: 3000,
-    });
+    showExpiringWarning('Сначала сохраните предыдущий аккаунт');
   }
   needNew.value = true;
 
-  debounceTimeout = setTimeout(() => {
-    debounceTimeout = null;
+  isDebounced.value = true;
+  setTimeout(() => {
+    isDebounced.value = false;
   }, 1500);
 };
 </script>
@@ -30,9 +35,9 @@ const setAddNew = () => {
   <div>
     <el-button
       type="primary"
-      @click="setAddNew"
+      @click="handleAddClick"
       class="mb-4"
-      :class="isMobile ? 'full-width' : ''"
+      :class="{ 'full-width': isMobile }"
       >Добавить учетную запись</el-button
     >
     <mobile-user-table v-if="isMobile" v-model="needNew" />

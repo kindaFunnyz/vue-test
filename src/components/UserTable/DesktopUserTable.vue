@@ -2,11 +2,20 @@
 import { useAccountStore } from '@/stores/accountStore.ts';
 import { onMounted } from 'vue';
 import DesktopAccountForm from '@/components/UserTable/UserForm/DesktopAccountForm.vue';
+import type { SavedAccountModel } from '@/types/recordType.ts';
 const needNew = defineModel<boolean>();
 const store = useAccountStore();
 onMounted(() => {
   store.loadAccounts();
 });
+const handleSaveNewAccount = (account: SavedAccountModel) => {
+  store.addAccount(account);
+  needNew.value = false;
+};
+
+const handleCancelNewAccount = () => {
+  needNew.value = false;
+};
 </script>
 
 <template>
@@ -30,13 +39,8 @@ onMounted(() => {
     <desktop-account-form
       v-if="needNew"
       class="table-row"
-      @saved="
-        (account) => {
-          store.addAccount(account);
-          needNew = false;
-        }
-      "
-      @remove="() => (needNew = false)"
+      @saved="handleSaveNewAccount"
+      @remove="handleCancelNewAccount"
     />
   </div>
 </template>
@@ -62,9 +66,6 @@ onMounted(() => {
   background-color: white;
   overflow: hidden;
   min-width: 46px;
-}
-
-.header-cell {
   font-weight: bold;
   color: #333;
 }

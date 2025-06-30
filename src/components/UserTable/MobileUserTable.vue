@@ -2,11 +2,19 @@
 import MobileAccountForm from '@/components/UserTable/UserForm/MobileAccountForm.vue';
 import { useAccountStore } from '@/stores/accountStore.ts';
 import { onMounted } from 'vue';
+import type { SavedAccountModel } from '@/types/recordType.ts';
 const needNew = defineModel<boolean>();
 const store = useAccountStore();
 onMounted(() => {
   store.loadAccounts();
 });
+function handleSaveNewAccount(account: SavedAccountModel) {
+  store.addAccount(account);
+  needNew.value = false;
+}
+function handleCancelNewAccount() {
+  needNew.value = false;
+}
 </script>
 
 <template>
@@ -19,13 +27,8 @@ onMounted(() => {
       @saved="store.editAccount" />
     <mobile-account-form
       v-if="needNew"
-      @saved="
-        (account) => {
-          store.addAccount(account);
-          needNew = false;
-        }
-      "
-      @remove="() => (needNew = false)"
+      @saved="handleSaveNewAccount"
+      @remove="handleCancelNewAccount"
   /></el-col>
 </template>
 

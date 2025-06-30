@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { type AccountFormEmit, useAccountForm } from './UserFormLogic.ts';
 import { RecordType, type SavedAccountModel } from '@/types/recordType.ts';
+import { computed } from 'vue';
 const props = defineProps<{ value?: SavedAccountModel }>();
 const emit = defineEmits<AccountFormEmit>();
 
 const { formRef, data, rules, updateData } = useAccountForm(props, emit);
+const showPasswordField = computed(() => data.value.type === RecordType.local);
+const recordTypeOptions = Object.values(RecordType);
 </script>
 
 <template>
@@ -13,7 +16,7 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
     :rules="rules"
     ref="formRef"
     label-position="left"
-    class="mb-6 p-4 border border-gray-300 rounded-bd bg-white"
+    class="account-form"
   >
     <el-row :gutter="20" class="flex-wrap">
       <el-col :span="24">
@@ -23,9 +26,7 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
             placeholder="Метки через ;"
             @blur="updateData"
           />
-          <div class="text-xs text-gray-500 mt-1">
-            Метки разделяются через ;
-          </div>
+          <div class="form-help">Метки разделяются через ;</div>
         </el-form-item>
       </el-col>
 
@@ -38,8 +39,8 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
             class="w-full"
           >
             <el-option
-              v-for="(value, index) in RecordType"
-              :key="index"
+              v-for="value in recordTypeOptions"
+              :key="value"
               :label="value"
               :value="value"
             />
@@ -57,7 +58,7 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
         </el-form-item>
       </el-col>
 
-      <el-col v-if="data.type === RecordType.local" :span="24">
+      <el-col v-if="showPasswordField" :span="24">
         <el-form-item label="Пароль" prop="password">
           <el-input
             v-model="data.password"
@@ -69,7 +70,7 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
         </el-form-item>
       </el-col>
 
-      <el-col :span="24" class="flex items-end">
+      <el-col :span="24" class="actions">
         <el-button type="danger" @click="emit('remove', data.id)">
           Удалить
         </el-button>
@@ -78,25 +79,23 @@ const { formRef, data, rules, updateData } = useAccountForm(props, emit);
   </el-form>
 </template>
 <style scoped>
-.mb-6 {
+.account-form {
   margin-bottom: 1.5rem;
-}
-.p-4 {
   padding: 1rem;
-}
-.border {
   border: 1px solid #dcdfe6;
-}
-.rounded-bd {
   border-radius: 6px;
-}
-.bg-white {
   background-color: #ffffff;
 }
 .flex-wrap {
   flex-wrap: wrap;
 }
-.items-end {
+.form-help {
+  font-size: 0.75rem;
+  color: #909399;
+  margin-top: 0.25rem;
+}
+.actions {
+  display: flex;
   align-items: flex-end;
 }
 </style>

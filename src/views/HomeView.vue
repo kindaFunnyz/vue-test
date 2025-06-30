@@ -16,6 +16,7 @@ import AdminComponent from '../components/AdminComponent.vue';
 .custom-page-header {
   border-bottom: 1px solid var(--el-border-color-light);
   margin-bottom: 20px;
+  padding-bottom: 10px;
 }
 .header-title {
   font-size: 18px;

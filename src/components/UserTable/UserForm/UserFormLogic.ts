@@ -14,31 +14,12 @@ export function useAccountForm(
   emit: AccountFormEmit,
 ) {
   const formRef = ref<FormInstance>();
-
-  const parseOrNew = (newValue?: SavedAccountModel) => {
-    return (
-      newValue?.toRawAccount() ?? {
-        id: '',
-        label: '',
-        type: RecordType.local,
-        login: '',
-        password: '',
-        errors: {
-          label: false,
-          type: false,
-          login: false,
-          password: false,
-        },
-      }
-    );
-  };
-
-  const data = ref<RawAccount>(parseOrNew(props?.value));
+  const data = ref<RawAccount>(createRawAccount(props?.value));
 
   watch(
     () => props.value,
-    (newValue?: SavedAccountModel) => {
-      data.value = parseOrNew(newValue);
+    (newValue) => {
+      data.value = createRawAccount(newValue);
     },
   );
 
@@ -64,8 +45,8 @@ export function useAccountForm(
   const updateData = async () => {
     if (!formRef.value) return;
     try {
-      const res = await formRef.value.validate();
-      if (!res) return;
+      const isValid = await formRef.value.validate();
+      if (!isValid) return;
     } catch (e: unknown) {
       return;
     }
@@ -75,8 +56,6 @@ export function useAccountForm(
     if (data.value.id === '') {
       data.value.id = crypto.randomUUID();
     }
-
-    console.warn(`object emitted ${data.value.id}`);
     emit('saved', SavedAccountModel.fromRaw(data.value));
   };
 
@@ -86,4 +65,21 @@ export function useAccountForm(
     rules,
     updateData,
   };
+}
+function createRawAccount(model?: SavedAccountModel): RawAccount {
+  return (
+    model?.toRawAccount() ?? {
+      id: '',
+      label: '',
+      type: RecordType.local,
+      login: '',
+      password: '',
+      errors: {
+        label: false,
+        type: false,
+        login: false,
+        password: false,
+      },
+    }
+  );
 }
